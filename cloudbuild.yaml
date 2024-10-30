@@ -1,0 +1,23 @@
+steps:
+  # Step 1: Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/academic-oath-419411/pg-to-bq-transfer', '.']
+  
+  # Step 2: Push the image to Google Container Registry (GCR)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/academic-oath-419411/pg-to-bq-transfer']
+
+  # Step 3: Deploy the image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 'deploy', 'pg-to-bq-transfer',
+      '--image', 'gcr.io/academic-oath-419411/pg-to-bq-transfer',
+      '--platform', 'managed',
+      '--region', 'us-central1',  # Adjust if you prefer a different region
+      '--allow-unauthenticated'
+    ]
+
+# Optional: Specify images to be cleaned up
+images:
+  - 'gcr.io/academic-oath-419411/pg-to-bq-transfer'
