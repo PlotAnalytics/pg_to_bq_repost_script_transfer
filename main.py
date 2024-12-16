@@ -42,6 +42,7 @@ def fetch_postgres_data():
               AND s.script IS NOT NULL
               AND length(encode(s.script, 'escape')) > 0
               AND encode(s.script, 'escape') NOT LIKE '%:%'
+              AND s.posted_date >= CURRENT_DATE - INTERVAL '50 days'
         """
         logging.info("Executing SQL query to fetch data from PostgreSQL.")
         cursor.execute(query)
